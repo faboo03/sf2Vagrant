@@ -1,44 +1,24 @@
 [submodule "cookbooks/apache2"]
-    path = cookbooks/apache2
-    url = http://github.com/opscode-cookbooks/apache2
-
+	path = cookbooks/apache2
+	url = http://github.com/opscode-cookbooks/apache2
 [submodule "cookbooks/apt"]
-    path = cookbooks/apt
-    url = http://github.com/opscode-cookbooks/apt
-
-[submodule "cookbooks/apt"]
-    path = cookbooks/apt
-    url = http://github.com/opscode-cookbooks/apt
-
+	path = cookbooks/apt
+	url = http://github.com/opscode-cookbooks/apt
 [submodule "cookbooks/build-essential"]
-    path = cookbooks/apt
-    url = https://github.com/opscode-cookbooks/build-essential.git
-
+	path = cookbooks/build-essential
+	url = http://github.com/opscode-cookbooks/build-essential
 [submodule "cookbooks/xml"]
-    path = cookbooks/xml
-    url = https://github.com/opscode-cookbooks/xml.git
-	
+	path = cookbooks/xml
+	url = http://github.com/opscode-cookbooks/xml
 [submodule "cookbooks/mysql"]
-    path = cookbooks/mysql
-    url = https://github.com/opscode-cookbooks/mysql.git
-	
-[submodule "cookbooks/mysql"]
-    path = cookbooks/mysql
-    url = https://github.com/opscode-cookbooks/mysql.git
-
+	path = cookbooks/mysql
+	url = http://github.com/opscode-cookbooks/mysql
 [submodule "cookbooks/php"]
-    path = cookbooks/php
-    url = https://github.com/opscode-cookbooks/php.git
-	
-[submodule "cookbooks/php-modules"]
-    path = cookbooks/php-modules
-    url = https://github.com/opscode-cookbooks/php-modules.git
-
+	path = cookbooks/php
+	url = http://github.com/opscode-cookbooks/php
 [submodule "cookbooks/git"]
-    path = cookbooks/git
-    url = https://github.com/opscode-cookbooks/git.git
-
+	path = cookbooks/git
+	url = http://github.com/opscode-cookbooks/git
 [submodule "cookbooks/composer"]
-    path = cookbooks/composer
-    url = https://github.com/opscode-cookbooks/composer.git
-	
+	path = cookbooks/composer
+	url = https://github.com/faboo03/cookbook-composer
