@@ -1,94 +1,84 @@
-Vagrant.configure("1") do |config|
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "saucy-server-cloudimg-amd64-vagrant-disk1.box"
+#   config.vm.box = "saucy"
+   config.vm.box = "precise64"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/saucy/20131019/saucy-server-cloudimg-amd64-vagrant-disk1.box"
+  # config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/saucy/20131019/saucy-server-cloudimg-amd64-vagrant-disk1.box"
+   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
-  # Boot with a GUI so you can see the screen. (Default is headless)
-  config.vm.boot_mode = :gui
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  config.vm.network :forwarded_port, guest: 80, host: 8080
 
-  # Assign this VM to a host only network IP, allowing you to access it
-  # via the IP.
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network :private_network, ip: "192.168.33.10"
 
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network :public_network
 
-  # Forward a port from the guest to the host, which allows for outside
-  # computers to access the VM, whereas host only networking does not.
-  # deprecated in 0.9.0
-  #config.vm.forward_port "http", 80, 8080
-  config.vm.forward_port 80, 8080  
-  
-  #deprecated in 0.9.0
-  #config.vm.network "33.33.33.10"
-  config.vm.network :hostonly, "33.33.33.10"
+  # If true, then any SSH connections made will enable agent forwarding.
+  # Default value: false
+  # config.ssh.forward_agent = true
 
-  if !RUBY_PLATFORM.include? "mswin"
-    config.vm.share_folder("vagrant-root", "/vagrant", ".", :mount_options => "dmode=777,fmode=777", :nfs => true)
-  end
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
 
-  # increase default memory capacity
-#  config.vm.customize ["modifyvm", :id, "--memory", "1024"]
-	
-  # Enable provisioning with chef solo, specifying a cookbooks path (relative
-  # to this Vagrantfile), and adding some recipes and/or roles.
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
   #
-  config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = "cookbooks"
-#    chef.add_recipe "symfony2"
-	
-	chef.add_recipe("apt")
-	chef.add_recipe("build-essential")
-	chef.add_recipe("xml")
-	chef.add_recipe("mysql")
-	chef.add_recipe("apache2::mod_php5")
-	chef.add_recipe("apache2::mod_rewrite")
-	chef.add_recipe("php::module_apc")
-	chef.add_recipe("php::module_mysql")
-	chef.add_recipe("php-modules")
-	chef.add_recipe("git")
-	chef.add_recipe("composer")
-	chef.add_recipe("hostfile")
-		
-    # You may also specify custom JSON attributes:
-    chef.json.merge!({
-      'mysql' => {
-        :server_root_password => "geoRaci9"
-      },
-      "php" => {
-        "conf_dir" => '/etc/php5/apache2',
-        "directives" => {
-            'date.timezone' => 'Europe/London',
-            'short_open_tag' => 0,
-        }
-      }
-    })
-  end
-
-  # Enable provisioning with chef server, specifying the chef server URL,
-  # and the path to the validation key (relative to this Vagrantfile).
+  # config.vm.provider :virtualbox do |vb|
+  #   # Don't boot with headless mode
+  #   vb.gui = true
   #
-  # The Opscode Platform uses HTTPS. Substitute your organization for
-  # ORGNAME in the URL and validation key.
-  #
-  # If you have your own Chef Server, use the appropriate URL, which may be
-  # HTTP instead of HTTPS depending on your configuration. Also change the
-  # validation key to validation.pem.
-  #
-  # config.vm.provision :chef_client do |chef|
-  #   chef.chef_server_url = "https://api.opscode.com/organizations/ORGNAME"
-  #   chef.validation_key_path = "ORGNAME-validator.pem"
+  #   # Use VBoxManage to customize the VM. For example to change memory:
+  #   vb.customize ["modifyvm", :id, "--memory", "1024"]
   # end
   #
-  # If you're using the Opscode platform, your validator client is
-  # ORGNAME-validator, replacing ORGNAME with your organization name.
-  #
-  # IF you have your own Chef Server, the default validation client name is
-  # chef-validator, unless you changed the configuration.
-  #
-  #   chef.validation_client_name = "ORGNAME-validator"
+  # View the documentation for the provider you're using for more
+  # information on available options.
+  
+	config.vm.provider "virtualbox" do |v|
+		v.customize ["modifyvm", :id, "--memory", "3000"]
+	end
+	
+   config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = "cookbooks"
+	
+    chef.add_recipe "apt"
+    chef.add_recipe "build-essential"
+    chef.add_recipe "xml"
+	chef.add_recipe "mysql"
+	chef.add_recipe "apache2"
+	chef.add_recipe "apache2::mod_php5"
+	chef.add_recipe "apache2::mod_rewrite"
+#	chef.add_recipe "php::module_apc"
+#	chef.add_recipe "php::module_mysql"
+#	chef.add_recipe "php-modules"
+#	chef.add_recipe "git"
+#	chef.add_recipe "composer"
+#	chef.add_recipe "hostfile"
+  
+     # You may also specify custom JSON attributes:
+	end
+
 end
