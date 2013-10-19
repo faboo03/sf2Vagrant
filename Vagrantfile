@@ -1,4 +1,4 @@
-Vagrant::Config.run do |config|
+Vagrant.configure("1") do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
@@ -28,47 +28,43 @@ Vagrant::Config.run do |config|
   config.vm.network :hostonly, "33.33.33.10"
 
   if !RUBY_PLATFORM.include? "mswin"
-    config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
+    config.vm.share_folder("vagrant-root", "/vagrant", ".", :mount_options => "dmode=777,fmode=777", :nfs => true)
   end
 
-  # Share an additional folder to the guest VM. The first argument is
-  # an identifier, the second is the path on the guest to mount the
-  # folder, and the third is the path on the host to the actual folder.
-  # config.vm.share_folder "v-data", "/vagrant_data", "../data"
-
-  # Enable provisioning with Puppet stand alone.  Puppet manifests
-  # are contained in a directory path relative to this Vagrantfile.
-  # You will need to create the manifests directory and a manifest in
-  # the file ubuntu-11.04-server.pp in the manifests_path directory.
-  #
-  # An example Puppet manifest to provision the message of the day:
-  #
-  # # group { "puppet":
-  # #   ensure => "present",
-  # # }
-  # #
-  # # File { owner => 0, group => 0, mode => 0644 }
-  # #
-  # # file { '/etc/motd':
-  # #   content => "Welcome to your Vagrant-built virtual machine!
-  # #               Managed by Puppet.\n"
-  # # }
-  #
-  # config.vm.provision :puppet do |puppet|
-  #   puppet.manifests_path = "manifests"
-  #   puppet.manifest_file  = "ubuntu-11.04-server.pp"
-  # end
-
+  # increase default memory capacity
+#  config.vm.customize ["modifyvm", :id, "--memory", "1024"]
+	
   # Enable provisioning with chef solo, specifying a cookbooks path (relative
   # to this Vagrantfile), and adding some recipes and/or roles.
   #
   config.vm.provision :chef_solo do |chef|
-    chef.add_recipe "symfony2"
- 
+    chef.cookbooks_path = "cookbooks"
+#    chef.add_recipe "symfony2"
+	
+	chef.add_recipe("apt")
+	chef.add_recipe("build-essential")
+	chef.add_recipe("xml")
+	chef.add_recipe("mysql")
+	chef.add_recipe("apache2::mod_php5")
+	chef.add_recipe("apache2::mod_rewrite")
+	chef.add_recipe("php::module_apc")
+	chef.add_recipe("php::module_mysql")
+	chef.add_recipe("php-modules")
+	chef.add_recipe("git")
+	chef.add_recipe("composer")
+	chef.add_recipe("hostfile")
+		
     # You may also specify custom JSON attributes:
     chef.json.merge!({
-      :mysql => {
-        :server_root_password => "geoRaci"
+      'mysql' => {
+        :server_root_password => "geoRaci9"
+      },
+      "php" => {
+        "conf_dir" => '/etc/php5/apache2',
+        "directives" => {
+            'date.timezone' => 'Europe/London',
+            'short_open_tag' => 0,
+        }
       }
     })
   end
